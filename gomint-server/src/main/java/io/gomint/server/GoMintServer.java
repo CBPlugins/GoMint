@@ -8,6 +8,7 @@ package io.gomint.server;
 
 import io.gomint.GoMint;
 import io.gomint.plugin.PluginManager;
+import io.gomint.raknet.PacketDispatcher;
 import io.gomint.raknet.RakPeerInterface;
 import io.gomint.raknet.SocketDescriptor;
 import io.gomint.raknet.StartupResult;
@@ -52,6 +53,21 @@ public class GoMintServer implements GoMint {
         StartupResult result = this.peerInterface.startup( 1, new SocketDescriptor[0], -1 );
         logger.info( "Peer interface started up with return code: " + result.toString() );
         this.peerInterface.setMaximumIncomingConnections( 1 );
+
+        PacketDispatcher dispatcher = new PacketDispatcher() {
+            @Override
+            protected void jniReceivePacket( long l, long l2, byte[] bytes ) {
+                logger.info( "Received packet!" );
+            }
+
+            @Override
+            protected void jniReceivePacket0( long l, long l2, byte[] bytes, String s, int i ) {
+                logger.info( "Received special packet!" );
+            }
+        };
+
+        this.peerInterface.setDispatcher( dispatcher );
+
         this.peerInterface.close();
 
         // ------------------------------------ //

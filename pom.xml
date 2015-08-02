@@ -20,6 +20,12 @@
             <version>1.16.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>io.gomint.raknet</groupId>
+            <artifactId>raknet-jni</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

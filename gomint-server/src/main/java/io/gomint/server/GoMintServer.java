@@ -1,3 +1,9 @@
+/*
+ *  Copyright (c) 2015, GoMint, BlackyPaw and geNAZt
+ *
+ *  This code is licensed under the MIT license found in the
+ *  LICENSE file in the root directory of this source tree.
+ */
 package io.gomint.server;
 
 import io.gomint.GoMint;
@@ -6,12 +12,15 @@ import io.gomint.raknet.RakPeerInterface;
 import io.gomint.raknet.SocketDescriptor;
 import io.gomint.raknet.StartupResult;
 import io.gomint.server.plugin.SimplePluginManager;
+<<<<<<< HEAD
 import io.gomint.server.util.NativeSearchPathUtil;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+=======
+>>>>>>> 46de0e8fe13f9491a85dd199662e90729aade48c
 
 /**
  * @author Fabian
@@ -21,8 +30,8 @@ public class GoMintServer implements GoMint {
 
     private final Logger logger = LoggerFactory.getLogger( GoMintServer.class );
 
-    @Getter private PluginManager pluginManager;
     private RakPeerInterface peerInterface;
+    private PluginManager pluginManager;
 
     public GoMintServer() {
         // ------------------------------------ //

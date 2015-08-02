@@ -12,15 +12,11 @@ import io.gomint.raknet.RakPeerInterface;
 import io.gomint.raknet.SocketDescriptor;
 import io.gomint.raknet.StartupResult;
 import io.gomint.server.plugin.SimplePluginManager;
-<<<<<<< HEAD
 import io.gomint.server.util.NativeSearchPathUtil;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-=======
->>>>>>> 46de0e8fe13f9491a85dd199662e90729aade48c
 
 /**
  * @author Fabian

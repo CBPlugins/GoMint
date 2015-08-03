@@ -49,19 +49,23 @@ public class GoMintServer implements GoMint {
             e.printStackTrace();
         }
 
+        boolean isWindows = ( System.getProperty( "os.name" ).toLowerCase().contains( "win" ) );
+        boolean isX64 = ( System.getProperty( "sun.arch.data.model" ).equals( "64" ) );
+        System.out.println ( "isWindows = " + isWindows + "; isX64 = " + isX64 );
+
         this.peerInterface = RakPeerInterface.getInstance();
-        StartupResult result = this.peerInterface.startup( 1, new SocketDescriptor[0], -1 );
+        StartupResult result = this.peerInterface.startup( 1, new SocketDescriptor[] { new SocketDescriptor( 19110, "127.0.0.1" ) }, -1 );
         logger.info( "Peer interface started up with return code: " + result.toString() );
         this.peerInterface.setMaximumIncomingConnections( 1 );
 
         PacketDispatcher dispatcher = new PacketDispatcher() {
             @Override
-            protected void jniReceivePacket( long l, long l2, byte[] bytes ) {
+            public void jniReceivePacket( long l, long l2, byte[] bytes ) {
                 logger.info( "Received packet!" );
             }
 
             @Override
-            protected void jniReceivePacket0( long l, long l2, byte[] bytes, String s, int i ) {
+            public void jniReceivePacket0( long l, long l2, byte[] bytes, String s, int i ) {
                 logger.info( "Received special packet!" );
             }
         };

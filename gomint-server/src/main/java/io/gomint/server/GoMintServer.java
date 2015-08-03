@@ -12,7 +12,6 @@ import io.gomint.raknet.PacketDispatcher;
 import io.gomint.raknet.RakPeerInterface;
 import io.gomint.raknet.SocketDescriptor;
 import io.gomint.raknet.StartupResult;
-import io.gomint.server.plugin.SimplePluginManager;
 import io.gomint.server.util.NativeSearchPathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,29 +53,37 @@ public class GoMintServer implements GoMint {
         System.out.println ( "isWindows = " + isWindows + "; isX64 = " + isX64 );
 
         this.peerInterface = RakPeerInterface.getInstance();
-        StartupResult result = this.peerInterface.startup( 1, new SocketDescriptor[] { new SocketDescriptor( 19110, "127.0.0.1" ) }, -1 );
+        StartupResult result = this.peerInterface.startup( 1, new SocketDescriptor[] { new SocketDescriptor( 19132, "0.0.0.0" ) }, -1 );
         logger.info( "Peer interface started up with return code: " + result.toString() );
         this.peerInterface.setMaximumIncomingConnections( 1 );
 
         PacketDispatcher dispatcher = new PacketDispatcher() {
             @Override
             public void jniReceivePacket( long l, long l2, byte[] bytes ) {
-                logger.info( "Received packet!" );
+                System.out.println( "Received packet!" );
             }
 
             @Override
             public void jniReceivePacket0( long l, long l2, byte[] bytes, String s, int i ) {
-                logger.info( "Received special packet!" );
+                System.out.println( "Received special packet!" );
             }
         };
 
         this.peerInterface.setDispatcher( dispatcher );
 
-        this.peerInterface.close();
+        while ( true ) {
+            try {
+                Thread.sleep( 50 );
+            } catch ( InterruptedException e ) {
+                e.printStackTrace();
+            }
+        }
+
+        //this.peerInterface.close();
 
         // ------------------------------------ //
         // Plugin Management
         // ------------------------------------ //
-        this.pluginManager = new SimplePluginManager();
+        //this.pluginManager = new SimplePluginManager();
     }
 }

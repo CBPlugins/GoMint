@@ -7,11 +7,24 @@
     <groupId>io.gomint</groupId>
     <artifactId>gomint</artifactId>
     <packaging>pom</packaging>
-    <version>0.11.0-SNAPSHOT</version>
+    <version>0.12.1-SNAPSHOT</version>
+
     <modules>
         <module>gomint-api</module>
         <module>gomint-server</module>
     </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>blackypaw-repo</id>
+            <name>SimpleConfig repository</name>
+            <url>http://repo.blackypaw.com:8081/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -26,6 +39,11 @@
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.blackypaw</groupId>
+            <artifactId>simpleconfig</artifactId>
+            <version>1.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -35,8 +53,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>

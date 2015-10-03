@@ -10,6 +10,7 @@ package io.gomint.server.network.packet;
 import io.gomint.raknet.Connection;
 import io.gomint.server.network.NetworkHandler;
 import io.gomint.server.network.PacketData;
+import io.gomint.server.network.PacketHandler;
 import lombok.RequiredArgsConstructor;
 
 import java.util.zip.DataFormatException;
@@ -59,6 +60,11 @@ public class BatchPacket extends Packet {
 
     @Override
     public void write( PacketData packetData ) {
+
+    }
+
+    @Override
+    public void handle( PacketHandler packetHandler ) {
 
     }
 }

@@ -9,10 +9,13 @@ package io.gomint.server.network;
 
 import io.gomint.raknet.Connection;
 import io.gomint.server.network.packet.BatchPacket;
+import io.gomint.server.network.packet.DisconnectPacket;
+import io.gomint.server.network.packet.Packet;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -23,6 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class NetworkHandler {
     private final Logger logger = LoggerFactory.getLogger( NetworkHandler.class );
 
+    private Map<Long, PacketHandler> packetHandlers = new ConcurrentHashMap<>();
     private AtomicBoolean running = new AtomicBoolean( true );
     private BlockingQueue<DataToHandle> dataToHandleQueue = new LinkedBlockingQueue<>();
 
@@ -55,6 +59,24 @@ public class NetworkHandler {
         if ( packetID == (byte) 0x92 ) {
             BatchPacket batchPacket = new BatchPacket( this, connection );
             batchPacket.read( packetData );
+        } else if ( packetID == (byte) 0x13 ) {
+            packetHandlers.put( connection.getGuid(), new PacketHandler() );
+        } else if ( packetID == (byte) 0x15 ) {
+            PacketHandler packetHandler = packetHandlers.remove( connection.getGuid() );
+            if ( packetHandler != null ) {
+                packetHandler.handle( new DisconnectPacket() );
+            }
+        } else {
+            Class<? extends Packet> packetClass = Protocol.getPacketClass( packetID );
+            if ( packetClass == null ) return;
+
+            try {
+                Packet packet = packetClass.newInstance();
+                packet.read( packetData );
+                packet.handle( packetHandlers.get( connection.getGuid() ) );
+            } catch ( InstantiationException | IllegalAccessException e ) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -7,6 +7,8 @@
 
 package io.gomint.server.network;
 
+import java.util.UUID;
+
 /**
  * @author geNAZt
  * @version 1.0
@@ -52,13 +54,19 @@ public class PacketData {
         return value;
     }
 
+    public String readString() {
+        short strLength = readShort();
+        byte[] bytes = readBytes( strLength );
+        return new String( bytes );
+    }
+
     public int readTriad() {
         ensureRead( 3 );
 
         int value = 0;
-        value += (readByte() & 0xFF) << 16;
-        value += (readByte() & 0xFF) << 8;
         value += (readByte() & 0xFF);
+        value += (readByte() & 0xFF) << 8;
+        value += (readByte() & 0xFF) << 16;
 
         return value;
     }
@@ -103,5 +111,29 @@ public class PacketData {
 
     public void resetCursor() {
         this.cursor = 0;
+    }
+
+    public long readLong() {
+        ensureRead( 8 );
+
+        long value = 0;
+        value += (readByte() & 0xFF) << 56;
+        value += (readByte() & 0xFF) << 48;
+        value += (readByte() & 0xFF) << 40;
+        value += (readByte() & 0xFF) << 32;
+        value += (readByte() & 0xFF) << 24;
+        value += (readByte() & 0xFF) << 16;
+        value += (readByte() & 0xFF) << 8;
+        value += (readByte() & 0xFF);
+
+        return value;
+    }
+
+    public UUID readUUID() {
+        return new UUID( readLong(), readLong() );
+    }
+
+    public boolean readBoolean() {
+        return (readByte() & 0xF) > 0;
     }
 }

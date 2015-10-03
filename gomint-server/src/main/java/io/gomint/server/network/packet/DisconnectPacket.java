@@ -14,8 +14,19 @@ import io.gomint.server.network.PacketHandler;
  * @author geNAZt
  * @version 1.0
  */
-public abstract class Packet {
-    public abstract void read( PacketData packetData );
-    public abstract void write( PacketData packetData );
-    public abstract void handle( PacketHandler packetHandler );
+public class DisconnectPacket extends Packet {
+    @Override
+    public void read( PacketData packetData ) {
+
+    }
+
+    @Override
+    public void write( PacketData packetData ) {
+
+    }
+
+    @Override
+    public void handle( PacketHandler packetHandler ) {
+        packetHandler.handle( this );
+    }
 }

@@ -8,10 +8,7 @@ package io.gomint.server;
 
 import io.gomint.GoMint;
 import io.gomint.plugin.PluginManager;
-import io.gomint.raknet.PacketDispatcher;
-import io.gomint.raknet.RakPeerInterface;
-import io.gomint.raknet.SocketDescriptor;
-import io.gomint.raknet.StartupResult;
+import io.gomint.raknet.*;
 import io.gomint.server.util.NativeSearchPathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +20,6 @@ import java.io.File;
  * @version 1.0
  */
 public class GoMintServer implements GoMint {
-
     private final Logger logger = LoggerFactory.getLogger( GoMintServer.class );
 
     private RakPeerInterface peerInterface;
@@ -48,30 +44,29 @@ public class GoMintServer implements GoMint {
             e.printStackTrace();
         }
 
+        // Check for windows and 64bit for correct natives
         boolean isWindows = ( System.getProperty( "os.name" ).toLowerCase().contains( "win" ) );
         boolean isX64 = ( System.getProperty( "sun.arch.data.model" ).equals( "64" ) );
-        System.out.println ( "isWindows = " + isWindows + "; isX64 = " + isX64 );
+        logger.info( "Using JNI Settings: Windows -> " + isWindows + "; 64bit -> " + isX64 );
 
         this.peerInterface = RakPeerInterface.getInstance();
         StartupResult result = this.peerInterface.startup( 1, new SocketDescriptor[] { new SocketDescriptor( 19132, "0.0.0.0" ) }, -1 );
         logger.info( "Peer interface started up with return code: " + result.toString() );
-        this.peerInterface.setMaximumIncomingConnections( 1 );
+        this.peerInterface.setMaximumIncomingConnections( 512 );
 
         PacketDispatcher dispatcher = new PacketDispatcher() {
             @Override
-            public void jniReceivePacket( long l, long l2, byte[] bytes ) {
-                System.out.println( "Received packet!" );
-            }
+            public void jniReceiveOnlinePacket( Connection connection, byte[] data ) {
 
-            @Override
-            public void jniReceivePacket0( long l, long l2, byte[] bytes, String s, int i ) {
-                System.out.println( "Received special packet!" );
             }
         };
 
         this.peerInterface.setDispatcher( dispatcher );
 
+        long t = 0;
         while ( true ) {
+            setMOTD( "CPU Usage: " + t++ );
+
             try {
                 Thread.sleep( 50 );
             } catch ( InterruptedException e ) {
@@ -85,5 +80,15 @@ public class GoMintServer implements GoMint {
         // Plugin Management
         // ------------------------------------ //
         //this.pluginManager = new SimplePluginManager();
+    }
+
+    @Override
+    public String getMOTD() {
+        return this.peerInterface.getMotd();
+    }
+
+    @Override
+    public void setMOTD( String motd ) {
+        this.peerInterface.setMotd( motd );
     }
 }

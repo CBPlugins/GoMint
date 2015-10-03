@@ -11,5 +11,17 @@ package io.gomint;
  * @version 1.0
  */
 public interface GoMint {
+    /**
+     * Get the current set MOTD
+     *
+     * @return the current MOTD
+     */
+    String getMOTD();
 
+    /**
+     * Set a new MOTD which gets sent while pinging
+     *
+     * @param motd which should be used
+     */
+    void setMOTD( String motd );
 }

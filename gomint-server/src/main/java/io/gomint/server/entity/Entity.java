@@ -7,6 +7,7 @@
 
 package io.gomint.server.entity;
 
+import io.gomint.server.util.Location;
 import lombok.Getter;
 
 /**
@@ -15,7 +16,8 @@ import lombok.Getter;
  */
 @Getter
 public class Entity {
-    private double x;
-    private double y;
-    private double z;
+    /**
+     * The location of this entity.
+     */
+    private Location location;
 }

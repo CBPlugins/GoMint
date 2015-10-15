@@ -34,15 +34,28 @@ public class Bootstrap {
         }
 
         // Scan the libs/ Directory for .jar Files
-        for ( File file : new File( "libs/" ).listFiles() ) {
-            if ( file.getAbsolutePath().endsWith( ".jar" ) ) {
-                try {
-                    System.out.println( "Loading lib: " + file.getAbsolutePath() );
-                    addJARToClasspath( file );
-                } catch ( IOException e ) {
-                    e.printStackTrace();
+        File libsFolder = new File( "libs/" );
+
+        // Checking if the libs folder exists or is a directory
+        if ( !libsFolder.exists() || !libsFolder.isDirectory() ) {
+            if ( !libsFolder.mkdir() ) {
+                System.out.println( "Could not create libs folder. Please double check you file system permissions." );
+            }
+        }
+
+        try {
+            for ( File file : libsFolder.listFiles() ) {
+                if ( file.getAbsolutePath().endsWith( ".jar" ) ) {
+                    try {
+                        System.out.println( "Loading lib: " + file.getAbsolutePath() );
+                        addJARToClasspath( file );
+                    } catch ( IOException e ) {
+                        e.printStackTrace();
+                    }
                 }
             }
+        } catch ( NullPointerException exception ) {
+            // Ignore
         }
 
         // Load the GoMint

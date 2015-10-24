@@ -24,17 +24,20 @@ public class CoreScheduler implements Scheduler {
     public Task execute( Runnable runnable ) {
         Task task = new ScheduledTask( runnable, 0, 0, TimeUnit.MILLISECONDS );
 
-
         return task;
     }
 
     @Override
     public Task schedule( Runnable runnable, long delay, TimeUnit timeUnit ) {
-        return null;
+        Task task = new ScheduledTask( runnable, delay, 0, timeUnit );
+
+        return task;
     }
 
     @Override
     public Task schedule( Runnable runnable, long delay, long period, TimeUnit timeUnit ) {
-        return null;
+        Task task = new ScheduledTask( runnable, delay, period, timeUnit );
+
+        return task;
     }
 }

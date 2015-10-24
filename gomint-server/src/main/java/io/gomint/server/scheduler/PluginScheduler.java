@@ -39,12 +39,9 @@ public class PluginScheduler implements Scheduler {
 
         try {
             Task task = coreScheduler.execute( runnable );
-            task.onException( new ExceptionHandler() {
-                @Override
-                public boolean onException( Exception e ) {
-                    plugin.getLogger().warn( "A task thrown a Exception", e );
-                    return true;
-                }
+            task.onException( e -> {
+                plugin.getLogger().warn( "A task thrown a Exception", e );
+                return true;
             } );
 
             this.runningTasks.add( task );
@@ -64,12 +61,9 @@ public class PluginScheduler implements Scheduler {
 
         try {
             Task task = coreScheduler.schedule( runnable, delay, timeUnit );
-            task.onException( new ExceptionHandler() {
-                @Override
-                public boolean onException( Exception e ) {
-                    plugin.getLogger().warn( "A task thrown a Exception", e );
-                    return true;
-                }
+            task.onException( e -> {
+                plugin.getLogger().warn( "A task thrown a Exception", e );
+                return true;
             } );
 
             this.runningTasks.add( task );
@@ -89,12 +83,9 @@ public class PluginScheduler implements Scheduler {
 
         try {
             Task task = coreScheduler.schedule( runnable, delay, period, timeUnit );
-            task.onException( new ExceptionHandler() {
-                @Override
-                public boolean onException( Exception e ) {
-                    plugin.getLogger().warn( "A task thrown a Exception", e );
-                    return true;
-                }
+            task.onException( e -> {
+                plugin.getLogger().warn( "A task thrown a Exception", e );
+                return true;
             } );
 
             this.runningTasks.add( task );
@@ -108,9 +99,7 @@ public class PluginScheduler implements Scheduler {
      * Internal Method for cleaning up all Tasks
      */
     public void cleanup() {
-        for ( Task runningTask : this.runningTasks ) {
-            runningTask.cancel();
-        }
+        this.runningTasks.forEach( io.gomint.scheduler.Task::cancel );
 
         this.runningTasks.clear();
         this.plugin = null;
